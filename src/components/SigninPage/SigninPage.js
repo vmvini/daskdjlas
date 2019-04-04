@@ -13,8 +13,6 @@ const customStyles = {
       transform             : 'translate(-50%, -50%)'
     }
   };
-  
-Modal.setAppElement('body')
 
 class SigninPage extends Component {
 
@@ -30,19 +28,19 @@ class SigninPage extends Component {
 
   onSignin(user) {
     return signin(user.email, user.password)
-    .then((res) => this.redirect(res), this.onSigninError());
+    .then((res) => this.redirect(res))
+    .catch(() => this.onSigninError());
   }
 
   onSignup(user) {
     return signup(user.email, user.password)
-    .then((res) => this.redirect(res), this.onSignupError());
+    .then((res) => this.redirect(res))
+    .catch(() => this.onSignupError());
   }
 
   redirect(user) {
-    debugger;
     this.props.history.push('/home');
     return Promise.resolve();
-    debugger;
   }
 
   onSigninError() {

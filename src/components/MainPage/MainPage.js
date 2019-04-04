@@ -19,8 +19,6 @@ const customStyles = {
   }
 };
 
-Modal.setAppElement('body')
-
 class MainPage extends Component {
 
   constructor() {
@@ -40,12 +38,13 @@ class MainPage extends Component {
     post(text)
     .then((res) => {
       debugger;
-    }, (err) => {
+    })
+    .catch((err) => {
       this.setState({
         modalIsOpen: true,
         errorMsg: 'Erro ao enviar postagem.'
       });
-    })
+    });
   }
 
   render() {
