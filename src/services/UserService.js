@@ -61,7 +61,7 @@ export const post = (content) => {
 };
 
 export const feed = () => {
-  debugger;
+  return axios.get(`${server}/api/posts`);
 };
 
 export const follow = () => {

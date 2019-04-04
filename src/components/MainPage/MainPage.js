@@ -5,7 +5,7 @@ import SideWidget from './../SideWidget/SideWidget';
 import NavBar from './../NavBar/NavBar';
 import Footer from './../Footer/Footer';
 import Modal from 'react-modal';
-import { post } from './../../services/UserService';
+import { post, feed } from './../../services/UserService';
 import './MainPage.css';
 
 const customStyles = {
@@ -24,8 +24,22 @@ class MainPage extends Component {
   constructor() {
     super();
     this.state = {
-      modalIsOpen: false
+      modalIsOpen: false,
+      posts: []
     };
+  }
+
+  componentWillMount() {
+    feed()
+    .then((res) => {
+      this.updatePosts(res.data);
+    })
+    .catch((e) => {
+      this.setState({
+        modalIsOpen: true,
+        errorMsg: 'Erro ao procurar posts.'
+      });
+    });
   }
 
   closeModal() {
@@ -37,13 +51,40 @@ class MainPage extends Component {
   onSend(text) {
     post(text)
     .then((res) => {
-      debugger;
+      this.addPost(res.data);
     })
     .catch((err) => {
       this.setState({
         modalIsOpen: true,
         errorMsg: 'Erro ao enviar postagem.'
       });
+    });
+  }
+
+  updatePosts(posts) {
+    this.setState({
+      posts: [
+        ...posts.map((p) => ( {...p }))
+      ]
+    });
+  }
+
+  addPost(post) {
+    this.setState({
+      posts: [ 
+        {...post}, 
+        ...this.state.posts.map((p) => ( { ...p })) 
+      ]
+    });
+  }
+
+  renderPosts(posts) {
+    return posts
+    .map((p) => {
+      return (
+        <FeedPost key={p._id} post={p}>
+        </FeedPost>
+      );
     });
   }
 
@@ -59,10 +100,7 @@ class MainPage extends Component {
             
             <div className="col-md-8">
               <Post onSend={(text) => this.onSend(text)}/>
-              <FeedPost></FeedPost>
-              <FeedPost></FeedPost>
-              <FeedPost></FeedPost>
-              <FeedPost></FeedPost>
+              {this.renderPosts(this.state.posts)}
             </div>
             <div className="col-md-4">
               <SideWidget></SideWidget>
