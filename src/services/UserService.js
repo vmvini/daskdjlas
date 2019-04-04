@@ -40,7 +40,6 @@ export const signin = (email, password) => {
 };
 
 function addToken(token) {
-  debugger;
   cookie.set('token', token);
   return Promise.resolve();
 }
@@ -51,11 +50,14 @@ export const signup = (email, password) => {
     username: email,
     password: password
   })
-  .then((res) => addToken(res));
+  .then((res) => addToken(res.data.token));
 };
 
 export const post = (content) => {
-  debugger;
+  return axios
+  .post(`${server}/api/posts`, {
+    text: content
+  });
 };
 
 export const feed = () => {
